@@ -9,7 +9,8 @@
 defcmd="fzf"
 guicmd="rofi -dmenu -i" #uncomment next line for dmenu
 #guicmd="dmenu -i -l 15"
-promptcmd="$defcmd"
+promptcmd="$guicmd"
+#promptcmd="$defcmd"
 if [ -z "$*" ]; then 
 	echo -n "Search: "
 	read -r query
