@@ -1,17 +1,27 @@
 import os
 import requests
 from bs4 import BeautifulSoup
+import sys 
+
 
 def getfilm(url):
+    links = []
     page = requests.get(url)
     soup = BeautifulSoup(page.content, 'html.parser')
-    results = soup.find('a' , class_="DownloadURL nobind Hoverable")['href']
-    print(results)
-    api =f"https://api.streamtape.com/remotedl/add?login=57d259db418ade6a4222&key=9ODPQYMXPDCa3pj&url={results}"
-    res = requests.post(api)
-    print(res.content)
+    for link in soup.find_all('a'):
+        lin = link.get('href')
+        if"live" in lin:
+            links.append(lin)
+    #print(links)
+    for link in links:
+        if "1080" in link:
+            print("download in 1080p : " + link)
+        if "720" in link:
+            print("download in 720p : " + link)
+        if "480" in link:
+            print("download in 480p : " + link)
+        if "360" in link:
+            print("download in 360p : " + link)
 
-file = open("moviesdb1.txt", "rt")
-for line in file:
-    getfilm(line)
-#getfilm("https://mycima.me/مشاهدة-فيلم-rush-hour-2-2001-مترجم/")
+
+getfilm(sys.argv[1])
