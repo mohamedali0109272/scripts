@@ -12,7 +12,7 @@ def getfilm(url):
         lin = link.get('href')
         if"live" in lin:
             links.append(lin)
-    #print(links)
+    print(links)
     for link in links:
         if "1080" in link:
             print("download in 1080p : " + link)
