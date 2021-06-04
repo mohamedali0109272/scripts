@@ -1,0 +1,72 @@
+#!/bin/sh
+
+menu(){
+    printf "1. [URL] Get a shorten url\n"
+    printf "2. [URL] Download file in ~/dl\n"
+    printf "3. [URL] Play videos in mpv\n"
+    printf "4. [URL] Play audio in mpv\n"
+    printf "5. [Image] Save clipbaord image in ~/pix/save\n"
+    printf "6. [Text] Send clipboard text with tgsend script\n"
+    printf "7. [Shell] run shell command\n"
+    printf "8. [Text] Clipboard text to speech with espeak\n"
+    printf "9. [URL] Play youtube videos in mpv\n"
+}
+
+spell_failed(){
+    notify-send "Failed to cast spell"
+}
+
+cbtext=$(xclip -o -selection clipboard)
+cbtext1=$(xclip -o -selection clipboard | head -c 40)
+choice=$(menu |dmenu -c -l 7 -g 1 -m dmenumon -nb "#000000" -sb "#AC0021" -fn FontAwesome:size=17  -p "$cbtext1" | cut -d. -f1)
+paplay $HOME/.local/share/sounds/magic.ogg &
+
+case $choice in
+    1)
+	output=$(curl -s -F"shorten=$cbtext" 0x0.st)
+	if [ "$output" = "Segmentation Fault" ]; then
+	    spell_failed
+	else
+	    echo "$output" | xclip -selection c
+	    notify-send "Shorten Link is in Clipboard"
+	fi
+	break
+	;;
+    2)
+	wget -P ~/dl $cbtext &&
+	    notify-send "Downloading File" ||
+		spell_failed
+	break
+	;;
+    3)
+	mpv "$cbtext" || spell_failed
+	break
+	;;
+    4)
+	mpv "$cbtext" || spell_failed
+	break
+	;;
+    5)
+	file=$(date +"%Y_%m_%d_%I_%M_%p")
+	xclip -selection clipboard -t image/png -o > $HOME/pix/save/$file.png ||
+	    spell_failed
+	break
+	;;
+    6)
+	user=$(echo "" | dmenu -p "Enter Username: ")
+	tgsend $user "$cbtext"
+	break
+	;;
+    7)
+	$cbtext || spell_failed
+	break
+	;;
+    8)
+	echo "$cbtext" | espeak -p 120
+	break
+	;;
+    9)
+    xdotool key Control_L+l+Control_L+c;cbtext2=$(xclip -o -selection clipboard);mpv "$cbtext2" || spell_failed
+	break
+	;;
+esac

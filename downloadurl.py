@@ -23,5 +23,7 @@ def getfilm(url):
         if "360" in link:
             print("download in 360p : " + link)
 
-
-getfilm(sys.argv[1])
+s = sys.argv[1]
+#print(f"https://mycima.nl/%d9%85%d8%b4%d8%a7%d9%87%d8%af%d8%a9-%d9%81%d9%8a%d9%84%d9%85-{sys.argv[1]}-%d9%85%d8%aa%d8%b1%d8%ac%d9%85-2/")
+#getfilm(f"https://mycima.nl/%d9%85%d8%b4%d8%a7%d9%87%d8%af%d8%a9-%d9%81%d9%8a%d9%84%d9%85-{sys.argv[1]}-%d9%85%d8%aa%d8%b1%d8%ac%d9%85-2/")
+getfilm(str(s))
